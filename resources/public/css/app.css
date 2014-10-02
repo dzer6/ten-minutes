@@ -1,0 +1,15 @@
+.width-100-prcnt {
+    width: 100%;
+}
+
+.width-120-px {
+    width: 120px;
+}
+
+.write-message input {
+    margin-top: 10px;
+}
+
+.write-message textarea {
+    margin-top: 10px;
+}

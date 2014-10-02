@@ -1,0 +1,36 @@
+<configuration scan="true">
+    <!-- http://logback.qos.ch/manual/configuration.html -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
+        <file>server.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- weekly rollover -->
+            <FileNamePattern>server.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!-- keep 30 days worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="ten.minutes" level="DEBUG" />
+    <logger name="jdbc.resultset" level="ERROR" />
+    <logger name="jdbc.audit" level="ERROR" />
+    <logger name="jdbc.sqlonly" level="ERROR" />
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>
