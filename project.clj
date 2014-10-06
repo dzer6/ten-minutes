@@ -27,6 +27,7 @@
                  [http-kit                    "2.1.19"]
                  [jayq                        "2.5.1"]
                  [com.andrewmcveigh/cljs-time "0.1.6"]
+                 [figwheel                    "0.1.4-SNAPSHOT"]
                  [reagent                     "0.4.3-SNAPSHOT"]]
 
   :main ten.minutes.main
@@ -39,6 +40,7 @@
   :resources-path "resources"
 
   :plugins [[lein-cljsbuild "1.0.3"]
+            [lein-figwheel "0.1.4-SNAPSHOT"]
             [lein-bower "0.5.1"]]
 
   :bower-dependencies [[react "0.11.2"]
@@ -49,11 +51,17 @@
 
   :bower {:directory "resources/public/lib"}
 
+  :figwheel { :http-server-root "public" ;; this will be in resources/
+              :port 3449                 ;; default
+              :css-dirs ["resources/public/css"] }
+
   :cljsbuild {:builds
-              {:main {:source-paths ["src/cljs" ]
+              {:main {:source-paths ["src/cljs" "src/cljs-dev"]
                       :compiler {:output-to "resources/public/app/main.js"
                                  :output-dir "resources/public/app/main"
-                                 :source-map "resources/public/app/main.js.map"}}
+                                 :optimizations :none
+                                 :warnings true
+                                 :source-map true}}
                :test {:source-paths ["src/cljs" "test/cljs" ]
                       :compiler {:pretty-print true}}}}
 

@@ -9,6 +9,7 @@
     [postal.core        :as postal]
     [hiccup.core        :as hc]
     [hiccup.page        :as hp]
+    [hiccup.element     :as he]
     [org.httpkit.server :as http-kit-server]
     [clojure.core.async :as async :refer (<! <!! >! >!! put! chan go go-loop)]
     [clojure.tools.logging :as log]
@@ -138,7 +139,9 @@
       (hp/include-js "/lib/jquery/dist/jquery.js")
       (hp/include-js "/lib/jquery-ui/jquery-ui.js")
       (hp/include-js "/lib/bootstrap/dist/js/bootstrap.js")
-      (hp/include-js "/app/main.js")]]))
+      (hp/include-js "/app/main/goog/base.js")
+      (hp/include-js "/app/main.js")
+      (he/javascript-tag "goog.require(\"ten.minutes.core\"); goog.require(\"ten.minutes.figwheel\");")]]))
 
 (defn landing-pg-handler [req]
   (let [{:keys [session]} req

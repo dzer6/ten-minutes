@@ -16,15 +16,17 @@
 
 (logf "ClojureScript appears to have loaded correctly.")
 
-(let [{:keys [chsk ch-recv send-fn state]} (sente/make-channel-socket! "/chsk")]
-  (def chsk       chsk)
-  (def ch-chsk    ch-recv) ; ChannelSocket's receive channel
-  (def chsk-send! send-fn) ; ChannelSocket's send API fn
-  (def chsk-state state)   ; Watchable, read-only atom
+(defonce sente-socket
+  (sente/make-channel-socket! "/chsk" {:type :auto }))
+
+(let [{:keys [chsk ch-recv send-fn state]} sente-socket]
+  (defonce chsk       chsk)
+  (defonce ch-chsk    ch-recv) ; ChannelSocket's receive channel
+  (defonce chsk-send! send-fn) ; ChannelSocket's send API fn
+  (defonce chsk-state state)   ; Watchable, read-only atom
 )
 
-
-(def app-state (atom {:email "loading"}))
+(defonce app-state (atom {:email "loading"}))
 
 ;;;; Routing handlers
 
@@ -177,19 +179,18 @@
 
 ;;;; Init
 
-(def router_ (atom nil))
-(defn stop-router! [] (when-let [stop-f @router_] (stop-f)))
-(defn start-router! []
-  (stop-router!)
-  (reset! router_ (sente/start-chsk-router! ch-chsk event-msg-handler*)))
+(sente/start-chsk-router! ch-chsk event-msg-handler*)
 
-(defn start! []
-  (start-router!))
-
-(start!)
-
-(jqm/ready
+(defn mount-it []
+  (prn "mount-it")
   (reagent/render-component
     (fn [] [app])
     (.-body js/document)
     (fn [])))
+
+(defn unmount-it []
+  (prn "unmount-it")
+  (reagent/unmount-component-at-node (.-body js/document)))
+
+(jqm/ready
+  (mount-it))
