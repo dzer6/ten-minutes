@@ -1,11 +1,9 @@
 (ns ten.minutes.core
   (:require-macros
-    [cljs.core.async.macros :as asyncm :refer (go go-loop)]
-    [jayq.macros :as jqm])
+    [cljs.core.async.macros :as asyncm :refer (go go-loop)])
   (:require
     [clojure.string  :as str]
-    [reagent.core :as reagent :refer [atom]]
-    [jayq.core :as jq]
+    [reagent.core :as reagent]
     [cljs-time.coerce :as tc]
     [cljs-time.format :as tf]
     [cljs.core.async :as async  :refer (<! >! put! chan)]
@@ -26,7 +24,10 @@
   (defonce chsk-state state)   ; Watchable, read-only atom
 )
 
-(defonce app-state (atom {:email "loading"}))
+(defonce app-state (reagent/atom {:email "loading"}))
+(defonce to-state (reagent/atom nil))
+(defonce subject-state (reagent/atom nil))
+(defonce body-state (reagent/atom nil))
 
 ;;;; Routing handlers
 
@@ -145,26 +146,31 @@
       [income-message]]]))
 
 (defn send-message-handler []
-  (let [to (jq/val (jq/$ "#to"))
-        subject (jq/val (jq/$ "#subject"))
-        body (jq/val (jq/$ "#body"))]
-    (chsk-send! [:message/send {:to to :subject subject :body body}])
-    (jq/val (jq/$ "#to") "")
-    (jq/val (jq/$ "#subject") "")
-    (jq/val (jq/$ "#body") "")))
+  (chsk-send! [:message/send {:to @to-state :subject @subject-state :body @body-state}])
+  (reset! to-state nil)
+  (reset! subject-state nil)
+  (reset! body-state nil))
 
 (defn write-message []
   [:div.panel.panel-default
    [:div.panel-body.write-message
     [:div.row
      [:div.col-md-12
-      [:input.form-control {:type "text" :id "to" :placeholder "Recipient"}]]
+      [:input.form-control {:type "text" :placeholder "Recipient"
+                            :value @to-state
+                            :on-change #(reset! to-state (-> % .-target .-value))}]]
      [:div.col-md-12
-      [:input.form-control {:type "text" :id "subject" :placeholder "Subject"}]]
+      [:input.form-control {:type "text" :placeholder "Subject"
+                            :value @subject-state
+                            :on-change #(reset! subject-state (-> % .-target .-value))}]]
      [:div.col-md-12
-      [:textarea.form-control {:rows 5 :id "body" }]]
+      [:textarea.form-control {:rows 5
+                               :value @body-state
+                               :on-change #(reset! body-state (-> % .-target .-value))}]]
      [:div.col-md-12
-      [:input.btn.btn-primary {:value "Send" :on-click send-message-handler}]]]]])
+      [:input.btn.btn-primary {:type "button"
+                               :value "Send"
+                               :on-click send-message-handler}]]]]])
 
 (defn app []
   [:div
@@ -190,7 +196,7 @@
 
 (defn unmount-it []
   (prn "unmount-it")
-  (reagent/unmount-component-at-node (.-body js/document)))
+  (reagent/unmount-component-at-node
+    (.-body js/document)))
 
-(jqm/ready
-  (mount-it))
+(mount-it)

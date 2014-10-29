@@ -25,7 +25,6 @@
                  [org.slf4j/log4j-over-slf4j  "1.7.7"]
                  [ch.qos.logback/logback-classic "1.1.2"]
                  [http-kit                    "2.1.19"]
-                 [jayq                        "2.5.1"]
                  [com.andrewmcveigh/cljs-time "0.1.6"]
                  [figwheel                    "0.1.4-SNAPSHOT"]
                  [reagent                     "0.4.3-SNAPSHOT"]]
@@ -44,10 +43,7 @@
             [lein-bower "0.5.1"]]
 
   :bower-dependencies [[react "0.11.2"]
-                       [bootstrap "3.2.0"]
-                       [jquery-ui "1.11.1"]
-                       [jquery "2.1.1"]
-                       [jquery-file-upload "9.8.0"]]
+                       [bootstrap "3.2.0"]]
 
   :bower {:directory "resources/public/lib"}
 

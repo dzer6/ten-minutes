@@ -136,8 +136,6 @@
      (hp/include-css "/css/app.css")
      [:body
       (hp/include-js "/lib/react/react.js")
-      (hp/include-js "/lib/jquery/dist/jquery.js")
-      (hp/include-js "/lib/jquery-ui/jquery-ui.js")
       (hp/include-js "/lib/bootstrap/dist/js/bootstrap.js")
       (hp/include-js "/app/main/goog/base.js")
       (hp/include-js "/app/main.js")
