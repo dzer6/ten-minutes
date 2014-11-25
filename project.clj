@@ -27,7 +27,7 @@
                  [http-kit                    "2.1.19"]
                  [com.andrewmcveigh/cljs-time "0.1.6"]
                  [figwheel                    "0.1.4-SNAPSHOT"]
-                 [reagent                     "0.4.3-SNAPSHOT"]]
+                 [reagent                     "0.4.3"]]
 
   :main ten.minutes.main
 
